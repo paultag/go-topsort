@@ -72,4 +72,36 @@ func TestTopsortCycle(t *testing.T) {
 	notok(t, err)
 }
 
+func TestTopsortLong(t *testing.T) {
+	/*
+		A --> B -> C -> D -> E
+		 \    ^
+		  \-> F
+	*/
+	network := topsort.NewNetwork()
+
+	network.AddNode("A", nil)
+	network.AddNode("B", nil)
+	network.AddNode("C", nil)
+	network.AddNode("D", nil)
+	network.AddNode("E", nil)
+	network.AddNode("F", nil)
+
+	network.AddEdge("A", "B")
+	network.AddEdge("A", "F")
+	network.AddEdge("F", "B")
+	network.AddEdge("B", "C")
+	network.AddEdge("C", "D")
+	network.AddEdge("D", "E")
+
+	series, err := network.Sort()
+	isok(t, err)
+	assert(t, len(series) == 6)
+
+	assert(t, series[0].Name == "A")
+	assert(t, series[1].Name == "F")
+	assert(t, series[2].Name == "B")
+	assert(t, series[3].Name == "C")
+}
+
 // vim: foldmethod=marker
