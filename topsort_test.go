@@ -62,4 +62,14 @@ func TestTopsortEasy(t *testing.T) {
 	assert(t, len(series) == 2)
 }
 
+func TestTopsortCycle(t *testing.T) {
+	network := topsort.NewNetwork()
+	network.AddNode("foo", nil)
+	network.AddNode("bar", nil)
+	network.AddEdge("foo", "bar")
+	network.AddEdge("bar", "foo")
+	_, err := network.Sort()
+	notok(t, err)
+}
+
 // vim: foldmethod=marker
