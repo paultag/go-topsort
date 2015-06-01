@@ -70,6 +70,34 @@ func TestTopsortCycle(t *testing.T) {
 	network.AddEdge("bar", "foo")
 	_, err := network.Sort()
 	notok(t, err)
+
+}
+
+func TestTopsortLongCycle(t *testing.T) {
+	network := topsort.NewNetwork()
+
+	network.AddNode("A", nil)
+	network.AddNode("B", nil)
+	network.AddNode("C", nil)
+	network.AddNode("D", nil)
+	network.AddNode("E", nil)
+	network.AddNode("F", nil)
+	network.AddNode("G", nil)
+	network.AddNode("H", nil)
+	network.AddNode("I", nil)
+
+	network.AddEdge("A", "B")
+	network.AddEdge("B", "C")
+	network.AddEdge("C", "D")
+	network.AddEdge("D", "E")
+	network.AddEdge("E", "F")
+	network.AddEdge("F", "G")
+	network.AddEdge("G", "H")
+	network.AddEdge("H", "I")
+	network.AddEdge("I", "A")
+
+	_, err := network.Sort()
+	notok(t, err)
 }
 
 func TestTopsortLong(t *testing.T) {
