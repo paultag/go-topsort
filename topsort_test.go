@@ -24,7 +24,7 @@ import (
 	"log"
 	"testing"
 
-	"pault.ag/x/topsort"
+	"pault.ag/go/topsort"
 )
 
 // Test Helpers {{{
