@@ -29,7 +29,7 @@ func main() {
 	// I need to clean the kitchen before I make dinner.
 
 	network.AddEdge("make dinner", "watch tv while eating")
-	// Need to make dinner before I cean eat it.
+	// Need to make dinner before I can eat it.
 
 	nodes, err := network.Sort()
 	if err != nil {
