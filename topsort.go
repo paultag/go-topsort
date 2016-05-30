@@ -138,6 +138,10 @@ func sortSingleNodes(nodes []*Node) ([]*Node, error) {
 }
 
 func sortNodes(nodes []*Node) (ret []*Node, err error) {
+	/* Reset Marked status of nodes so they're ready to sort */
+	for _, node := range nodes {
+		node.Marked = false
+	}
 	for {
 		generation, err := sortSingleNodes(nodes)
 		if err != nil {
@@ -147,10 +151,6 @@ func sortNodes(nodes []*Node) (ret []*Node, err error) {
 			break
 		}
 		ret = append(ret, generation...)
-	}
-	/* Reset Marked status of nodes now that we're done */
-	for _, node := range nodes {
-		node.Marked = false
 	}
 	return
 }
