@@ -151,4 +151,38 @@ func TestDeterminism(t *testing.T) {
 	assert(t, series[4].Name == "A")
 }
 
+func TestReSort(t *testing.T) {
+	network := newAlphaNetwork('A', 'C')
+
+	series, err := network.Sort()
+	isok(t, err)
+	assert(t, len(series) == 3)
+
+	assert(t, series[0].Name == "A")
+	assert(t, series[1].Name == "B")
+	assert(t, series[2].Name == "C")
+
+	network.AddEdge("C", "A")
+
+	series, err = network.Sort()
+	isok(t, err)
+	assert(t, len(series) == 3)
+
+	assert(t, series[0].Name == "B")
+	assert(t, series[1].Name == "C")
+	assert(t, series[2].Name == "A")
+
+	network.AddNode("D", nil)
+	network.AddEdge("D", "B")
+
+	series, err = network.Sort()
+	isok(t, err)
+	assert(t, len(series) == 4)
+
+	assert(t, series[0].Name == "C")
+	assert(t, series[1].Name == "D")
+	assert(t, series[2].Name == "A")
+	assert(t, series[3].Name == "B")
+}
+
 // vim: foldmethod=marker
