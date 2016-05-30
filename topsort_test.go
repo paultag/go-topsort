@@ -50,6 +50,16 @@ func assert(t *testing.T, expr bool) {
 	}
 }
 
+func newAlphaNetwork(start, end rune) *topsort.Network {
+	network := topsort.NewNetwork()
+
+	for c := start; c <= end; c++ {
+		network.AddNode(string(c), nil)
+	}
+
+	return network
+}
+
 // }}}
 
 func TestTopsortEasy(t *testing.T) {
@@ -70,21 +80,10 @@ func TestTopsortCycle(t *testing.T) {
 	network.AddEdge("bar", "foo")
 	_, err := network.Sort()
 	notok(t, err)
-
 }
 
 func TestTopsortLongCycle(t *testing.T) {
-	network := topsort.NewNetwork()
-
-	network.AddNode("A", nil)
-	network.AddNode("B", nil)
-	network.AddNode("C", nil)
-	network.AddNode("D", nil)
-	network.AddNode("E", nil)
-	network.AddNode("F", nil)
-	network.AddNode("G", nil)
-	network.AddNode("H", nil)
-	network.AddNode("I", nil)
+	network := newAlphaNetwork('A', 'I')
 
 	network.AddEdge("A", "B")
 	network.AddEdge("B", "C")
@@ -106,14 +105,7 @@ func TestTopsortLong(t *testing.T) {
 		 \    ^
 		  \-> F
 	*/
-	network := topsort.NewNetwork()
-
-	network.AddNode("A", nil)
-	network.AddNode("B", nil)
-	network.AddNode("C", nil)
-	network.AddNode("D", nil)
-	network.AddNode("E", nil)
-	network.AddNode("F", nil)
+	network := newAlphaNetwork('A', 'F')
 
 	network.AddEdge("A", "B")
 	network.AddEdge("A", "F")
@@ -130,6 +122,33 @@ func TestTopsortLong(t *testing.T) {
 	assert(t, series[1].Name == "F")
 	assert(t, series[2].Name == "B")
 	assert(t, series[3].Name == "C")
+}
+
+func TestDeterminism(t *testing.T) {
+	network := newAlphaNetwork('A', 'D')
+
+	series, err := network.Sort()
+	isok(t, err)
+	assert(t, len(series) == 4)
+
+	assert(t, series[0].Name == "A")
+	assert(t, series[1].Name == "B")
+	assert(t, series[2].Name == "C")
+	assert(t, series[3].Name == "D")
+
+	network = newAlphaNetwork('A', 'E')
+
+	network.AddEdge("D", "A")
+
+	series, err = network.Sort()
+	isok(t, err)
+	assert(t, len(series) == 5)
+
+	assert(t, series[0].Name == "B")
+	assert(t, series[1].Name == "C")
+	assert(t, series[2].Name == "D")
+	assert(t, series[3].Name == "E")
+	assert(t, series[4].Name == "A")
 }
 
 // vim: foldmethod=marker
