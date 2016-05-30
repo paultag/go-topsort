@@ -27,23 +27,27 @@ import (
 // Network Helpers {{{
 
 type Network struct {
-	Nodes map[string]*Node
+	nodes map[string]*Node
+	order []string
 }
 
 func NewNetwork() *Network {
-	return &Network{Nodes: map[string]*Node{}}
+	return &Network{
+		nodes: map[string]*Node{},
+		order: []string{},
+	}
 }
 
 func (tn *Network) Sort() ([]*Node, error) {
 	nodes := make([]*Node, 0)
-	for _, v := range tn.Nodes {
-		nodes = append(nodes, v)
+	for _, key := range tn.order {
+		nodes = append(nodes, tn.nodes[key])
 	}
 	return sortNodes(nodes)
 }
 
 func (tn *Network) Get(name string) *Node {
-	return tn.Nodes[name]
+	return tn.nodes[name]
 }
 
 func (tn *Network) AddNode(name string, value interface{}) *Node {
@@ -55,7 +59,10 @@ func (tn *Network) AddNode(name string, value interface{}) *Node {
 		Marked:        false,
 	}
 
-	tn.Nodes[name] = &node
+	if _, ok := tn.nodes[name]; !ok {
+		tn.order = append(tn.order, name)
+	}
+	tn.nodes[name] = &node
 	return &node
 }
 
