@@ -148,6 +148,10 @@ func sortNodes(nodes []*Node) (ret []*Node, err error) {
 		}
 		ret = append(ret, generation...)
 	}
+	/* Reset Marked status of nodes now that we're done */
+	for _, node := range nodes {
+		node.Marked = false
+	}
 	return
 }
 
