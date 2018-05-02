@@ -13,7 +13,7 @@ package main
 import (
 	"fmt"
 
-	"pault.ag/go/topsort"
+	"github.com/paultag/go-topsort"
 )
 
 func main() {
