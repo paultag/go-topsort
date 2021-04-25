@@ -185,4 +185,12 @@ func TestReSort(t *testing.T) {
 	assert(t, series[3].Name == "B")
 }
 
+func TestTopsortEasyEdges(t *testing.T) {
+	network := topsort.NewNetwork()
+	network.AddEdgeAndNodes("foo", "bar")
+	series, err := network.Sort()
+	isok(t, err)
+	assert(t, len(series) == 2)
+}
+
 // vim: foldmethod=marker
